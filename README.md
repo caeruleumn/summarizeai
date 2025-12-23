@@ -16,7 +16,6 @@ Aplikasi ini memungkinkan user untuk:
 * Ringkasan otomatis menggunakan AI
 * Loading saat proses berjalan
 * Tampilan sederhana dan responsif
-* Bisa menangani PDF yang cukup panjang (teks dibagi per bagian)
 
 ## 🛠️ Teknologi yang Digunakan
 
@@ -43,7 +42,6 @@ Aplikasi ini memungkinkan user untuk:
 
 ### Persiapan
 
-* Node.js minimal versi 18
 * Python minimal versi 3.8
 * Token API dari Hugging Face
 
