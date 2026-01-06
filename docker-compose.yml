@@ -1,0 +1,54 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:16
+    container_name: pdfai-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: pdfai
+      POSTGRES_USER: pdfai
+      POSTGRES_PASSWORD: pdfai
+    ports:
+      - "5433:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  go-api:
+    build: ./go-backend
+    container_name: pdfai-go-api
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: postgres://pdfai:pdfai@db:5432/pdfai?sslmode=disable
+      SUMMARIZER_URL: http://summarizer:8000/summarize
+      MAX_UPLOAD_MB: "10"
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./storage:/app/storage
+
+  summarizer:
+    build: ./backend
+    container_name: pdfai-summarizer
+    depends_on:
+      - db
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./storage:/app/storage
+
+  frontend:
+    build: ./frontend
+    container_name: pdfai-frontend
+    command: npm run dev
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    depends_on:
+      - go-api
+
+volumes:
+  db_data:
